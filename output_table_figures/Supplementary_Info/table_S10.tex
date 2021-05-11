@@ -1,0 +1,68 @@
+\begin{table}[htbp]\centering\footnotesize{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{OLS regression models for electricity quantity with state fixed effects using dry-bulb CDDs. \label{ely_reg_db}}
+\begin{tabular}{l*{3}{c}}
+\hline\hline
+            &\multicolumn{1}{c}{ln_ely_q}&\multicolumn{1}{c}{ln_ely_q}&\multicolumn{1}{c}{ln_ely_q}\\
+\hline
+mean_CDD_db &    -0.00105\sym{***}&   -0.000600\sym{***}&    -0.00121\sym{***}\\
+            &   (0.00009)         &   (0.00020)         &   (0.00011)         \\
+ln_total_exp_usd_2011&       0.257\sym{***}&       0.498\sym{***}&       0.228\sym{***}\\
+            &   (0.00608)         &   (0.03008)         &   (0.00682)         \\
+ln_total_exp_usd_2011_CDD_db&    0.000125\sym{***}&   0.0000872\sym{***}&    0.000188\sym{***}\\
+            &   (0.00001)         &   (0.00002)         &   (0.00001)         \\
+n_members   &      0.0875\sym{***}&    -0.00955\sym{***}&      0.0470\sym{***}\\
+            &   (0.00279)         &   (0.00214)         &   (0.00213)         \\
+sh_under16  &     -0.0715\sym{***}&     0.00365         &     -0.0475\sym{***}\\
+            &   (0.01860)         &   (0.01410)         &   (0.01466)         \\
+0.ownership_d&           0         &           0         &           0         \\
+            &         (.)         &         (.)         &         (.)         \\
+1.ownership_d&      0.0411\sym{***}&       0.237\sym{***}&      0.0670\sym{***}\\
+            &   (0.00694)         &   (0.01016)         &   (0.00743)         \\
+0.edu_head_2&           0         &           0         &           0         \\
+            &         (.)         &         (.)         &         (.)         \\
+1.edu_head_2&       0.109\sym{***}&      0.0724\sym{***}&      0.0862\sym{***}\\
+            &   (0.01259)         &   (0.00617)         &   (0.00710)         \\
+2.edu_head_2&       0.183\sym{***}&       0.136\sym{***}&       0.115\sym{***}\\
+            &   (0.01341)         &   (0.00812)         &   (0.00756)         \\
+3.edu_head_2&       0.259\sym{***}&       0.199\sym{***}&       0.167\sym{***}\\
+            &   (0.01531)         &   (0.00945)         &   (0.00974)         \\
+1.housing_index_lab&           0         &                     &           0         \\
+            &         (.)         &                     &         (.)         \\
+2.housing_index_lab&       0.119         &                     &      0.0897\sym{***}\\
+            &   (0.12466)         &                     &   (0.02210)         \\
+3.housing_index_lab&       0.106         &                     &       0.218\sym{***}\\
+            &   (0.12413)         &                     &   (0.02436)         \\
+age_head    &     0.00322\sym{***}&     0.00548\sym{***}&     0.00560\sym{***}\\
+            &   (0.00023)         &   (0.00027)         &   (0.00026)         \\
+1.sex_head  &           0         &           0         &           0         \\
+            &         (.)         &         (.)         &         (.)         \\
+2.sex_head  &    0.000108         &      0.0707\sym{***}&      0.0186\sym{***}\\
+            &   (0.00604)         &   (0.00768)         &   (0.00504)         \\
+0.urban     &                     &           0         &           0         \\
+            &                     &         (.)         &         (.)         \\
+1.urban     &                     &       0.285\sym{***}&       0.121\sym{***}\\
+            &                     &   (0.01167)         &   (0.01139)         \\
+2.occupation_head&                     &           0         &    -0.00157         \\
+            &                     &         (.)         &   (0.00776)         \\
+3.occupation_head&                     &     -0.0203\sym{***}&     -0.0403\sym{***}\\
+            &                     &   (0.00640)         &   (0.00672)         \\
+4.occupation_head&                     &     -0.0659\sym{***}&     -0.0358\sym{***}\\
+            &                     &   (0.00792)         &   (0.01090)         \\
+5.occupation_head&                     &      -0.104\sym{***}&      0.0872\sym{*}  \\
+            &                     &   (0.01289)         &   (0.05047)         \\
+0.occupation_head&                     &                     &           0         \\
+            &                     &                     &         (.)         \\
+1.occupation_head&                     &                     &      0.0107         \\
+            &                     &                     &   (0.01892)         \\
+State FE    &          No         &         Yes         &         Yes         \\
+Macro-Region FE &         Yes         &          No         &          No         \\
+\hline
+Obs.        &       33321         &       85371         &       61421         \\
+R-squared   &       0.325         &       0.525         &       0.525         \\
+\hline\hline
+\multicolumn{4}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{4}{l}{\footnotesize Clustered standard errors at district level for MEX and IND, and robust standard errors for Brazil in parentheses. State- and year-fixed effects for MEX and IND, and region- and year-fixed effect for BRA. ***p<0.001; **p<0.05; *p<0.1.}\\
+\multicolumn{4}{l}{\footnotesize \sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)}\\
+\end{tabular}}
+\end{table}
