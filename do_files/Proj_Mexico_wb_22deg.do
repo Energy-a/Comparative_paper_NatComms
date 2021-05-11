@@ -5,8 +5,8 @@
  (DOI of paper to be included upon acceptance)
  
  This do-file:
-   1) exploits CDD-wet bulb 24 deg
-   2) conducts logit regressions for India using 2011-2012 wave
+   1) exploits CDD-wet bulb 22 deg
+   2) conducts logit regressions for Mexico using 2016 wave
    3) project future ownership rates
    4) run intensive margin regressions: electricity expenditure on climate + covariates
 
@@ -19,26 +19,54 @@ cd "C:\Users\Standard\Google Drive\5-CountryExpertsExchange\Comparative_Paper\Da
 use "input_data_files\Household.dta", clear
 	 
 * Select the country
-keep if country=="India"
-drop if occupation_head == 1 & country == "India" // 64 obs: empty category in the regression -> we drop it otherwise it does not allow for computing the marginal effect of occupation.
-	 	 
+keep if country=="Mexico"
+
 * Keep only those with access to ely
 keep if ely_access == 1
 
 * Keep only last wave
-drop if year == 2005
+drop if year==2004 | year==2012
 
 * Generate logs and interactions
 gen ln_total_exp_usd_2011 = log(total_exp_usd_2011)
 gen ln_ely_q=log(ely_q)
 
+*** Merge with 22-deg CDDs
+preserve
+
+use "input_data_files/pop_wt_dta_files_using_GLDAS_CDDwb_hist/22_deg/MEX_statistics_district_level_CDD_wetbulb_22degC_1970_2016_POP_wght.dta", clear
+
+** decode Region_Name (long format) in a str var (state3)
+rename Region_ID state2
+rename District_ID district2
+rename District_Name district3
+
+** create CDD mean for the other waves
+rename mean_CDD_1970_2016 mean_CDD_wb
+
+* Keep
+keep state2 district2 mean_CDD_wb
+
+* Save
+tempfile cdd
+save `cdd', replace	
+
+restore				  
+
+drop mean_CDD_wb
+
+* Merge
+merge m:1 state2 district2 using "`cdd'"
+drop if _merge == 2
+drop _merge
+
 * Merge data with projections dataframe
-merge m:1 country state2 using "input_data_files\Projections.dta"
+merge m:1 country state3 using "input_data_files\Projections_22deg.dta"
 drop if _merge == 2
 drop _merge
 
 * Merge data with regional historical (1986-2005) wet CDD dataframe
-merge m:1 country state3 using "input_data_files\CDD_wb_hist.dta"
+merge m:1 country state3 using "input_data_files\CDD_wb_hist_22deg.dta"
 drop if _merge == 2
 drop _merge
 
@@ -51,10 +79,10 @@ drop _merge
 
 ** Logistic regression of AC on covariates
 quietly logit ac c.mean_CDD_wb c.ln_total_exp_usd_2011 c.ln_total_exp_usd_2011#c.mean_CDD_wb i.urban n_members sh_under16 i.ownership_d i.edu_head_2 i.occupation_head ///
-		age_head i.sex_head i.state, vce(cluster state_district) nolog 
+			  i.housing_index_lab age_head i.sex_head i.state, vce(cluster state_district) nolog 
 
 ** Predicted probabilities
-predict phat0_obs if e(sample)
+predict phat0_obs if e(sample) /*this includes a constant*/
 
 ** Predictions using future data
 * First compute percent change
@@ -83,7 +111,7 @@ foreach ssp in SSP1 SSP2 SSP3 SSP4 SSP5 {
 
 * Run logit regression
 quietly logit ac c.mean_CDD_wb c.ln_total_exp_usd_2011 c.ln_total_exp_usd_2011#c.mean_CDD_wb i.urban n_members sh_under16 i.ownership_d i.edu_head_2 i.occupation_head ///
-			  age_head i.sex_head i.state, vce(cluster state_district) nolog
+			  i.housing_index_lab age_head i.sex_head i.state, vce(cluster state_district) nolog
 
 * Substitute the new CDD and total exp by multiplying historical one for the regional % change
 replace mean_CDD_wb = mean_CDD_wb*(1+pct_cdd_`rcp'_`ssp') 
@@ -92,7 +120,7 @@ replace ln_total_exp_usd_2011 =log(total_exp_usd_2011*(1+pct_texp_`ssp'))
 * Re-fit and compute the new predicted probabilities
 predict phat_fut_`rcp'_`ssp' if e(sample)
 
-* Reset the historical CDD
+* Reset the historical values
 replace mean_CDD_wb = mean_CDD_c 
 replace ln_total_exp_usd_2011 = ln_total_exp_usd_2011_c 
 
@@ -123,8 +151,8 @@ replace ac_fut_`rcp'_`ssp' = 1 if phat_fut_`rcp'_`ssp' > 0.5 & phat_fut_`rcp'_`s
 
 * Run regression of log ely consumption on linear CDD-wb and total exp
 quietly reg ln_ely_q c.mean_CDD_wb c.ln_total_exp_usd_2011 c.ln_total_exp_usd_2011#c.mean_CDD_wb i.urban n_members sh_under16 i.ownership_d i.edu_head_2 i.occupation_head  ///
-			age_head i.sex_head i.state, vce(cluster state_district)
-
+			i.housing_index_lab age_head i.sex_head i.state, vce(cluster state_district)
+			
 * Find fitted values
 predict ely_hat0_q if e(sample)
 replace ely_hat0_q = exp(ely_hat0_q) if e(sample)
@@ -135,14 +163,14 @@ foreach ssp in SSP1 SSP2 SSP3 SSP4 SSP5 {
 
 ** Run regression of log ely quantity on linear CDD-wb and total exp (INT)
 quietly reg ln_ely_q c.mean_CDD_wb c.ln_total_exp_usd_2011 c.ln_total_exp_usd_2011#c.mean_CDD_wb i.urban n_members sh_under16 i.ownership_d i.edu_head_2 i.occupation_head  ///
-			age_head i.sex_head i.state, vce(cluster state_district)
-	
+			i.housing_index_lab age_head i.sex_head i.state, vce(cluster state_district)
+
 * Substitute the new CDD and total exp by multiplying historical one for the regional % change
 replace mean_CDD_wb = mean_CDD_wb*(1+pct_cdd_`rcp'_`ssp') 
 replace ln_total_exp_usd_2011 =log(total_exp_usd_2011*(1+pct_texp_`ssp')) 
 
 * Find future fitted values
-predict ely_hat_fut_int_`rcp'_`ssp'_q if e(sample)
+predict ely_hat_fut_int_`rcp'_`ssp'_q  if e(sample)
 replace ely_hat_fut_int_`rcp'_`ssp'_q = exp(ely_hat_fut_int_`rcp'_`ssp'_q) if e(sample)
 
 * Reset the historical values
@@ -156,16 +184,13 @@ gen ely_gro_int_`rcp'_`ssp'_q = (ely_hat_fut_int_`rcp'_`ssp'_q/ely_hat0_q)-1
 }
 }
 
-** Create income decile
-gsort total_exp_usd_2011
-xtile dec_inc=total_exp_usd_2011 [pweight= weight], nq(10)
-
-
+	   
 ** Save
 * Keep variables for next steps
-keep hhid year country* state* district* weight ac ac_fut_* mean_CDD_wb mean_CDD_db exp_cap_usd_2011 ln_total_exp_usd_2011 ely_q ely_hat_fut* ely_gro_* dec_inc pct_*
+keep hhid year country* state* district* weight ac ac_fut_* mean_CDD_wb mean_CDD_db exp_cap_usd_2011 ln_total_exp_usd_2011 ely_q ely_hat_fut* ely_gro_* pct_*
 
 * Save
-save "output_data_files\projections\second_stage_IND_wb.dta", replace
+save "output_data_files\projections\second_stage_MEX_wb_22.dta", replace
+	   
 
 ************ STOP ************

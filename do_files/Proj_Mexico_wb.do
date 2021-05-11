@@ -1,8 +1,11 @@
 
 /*----------------------------------------------------------------------------------
  
+  Pavanello et al. (2021): "Air-Conditioning and the Adaptation Cooling Deficit in Emerging Economies"
+ (DOI of paper to be included upon acceptance)
+ 
  This do-file:
-   1) exploits CDD-wet bulb
+   1) exploits CDD-wet bulb 24 deg
    2) conducts logit regressions for Mexico using 2016 wave
    3) project future ownership rates
    4) run intensive margin regressions: electricity expenditure on climate + covariates
@@ -14,11 +17,6 @@ cd "C:\Users\Standard\Google Drive\5-CountryExpertsExchange\Comparative_Paper\Da
 
 * Load data
 use "input_data_files\Household.dta", clear
-
-* Keep only vars of interest to speed up computations
-keep hhid ac fan refrigerator mean_CDD_wb* mean_CDD_db* ln_exp_cap_usd exp_cap_usd_2011 exp_cap_usd_2010 ely_exp_usd_2011 ely_exp_usd_2010 urban n_members sh_under16 ///
-     ownership edu_head_2 occupation_head age_head sex_head state* district* year country* wave ely_access housing_index* ///
-	 ownership_d walls_d roof_d lighting_d water_d ely_q total* weight ely_price mean_CDD_1970_2010_*
 	 
 * Select the country
 keep if country=="Mexico"
@@ -34,12 +32,12 @@ gen ln_total_exp_usd_2011 = log(total_exp_usd_2011)
 gen ln_ely_q=log(ely_q)
 
 * Merge data with projections dataframe
-merge m:m hhid country state state_district using "input_data_files\Projections.dta"
+merge m:1 country state2 using "input_data_files\Projections.dta"
 drop if _merge == 2
 drop _merge
 
 * Merge data with regional historical (1986-2005) wet CDD dataframe
-merge m:1 country state3 using "input_data_files\HH_4countries_CDD_wb_hist.dta"
+merge m:1 country state3 using "input_data_files\CDD_wb_hist.dta"
 drop if _merge == 2
 drop _merge
 
@@ -125,10 +123,7 @@ replace ac_fut_`rcp'_`ssp' = 1 if phat_fut_`rcp'_`ssp' > 0.5 & phat_fut_`rcp'_`s
 * Run regression of log ely consumption on linear CDD-wb and total exp
 quietly reg ln_ely_q c.mean_CDD_wb c.ln_total_exp_usd_2011 c.ln_total_exp_usd_2011#c.mean_CDD_wb i.urban n_members sh_under16 i.ownership_d i.edu_head_2 i.occupation_head  ///
 			i.housing_index_lab age_head i.sex_head i.state, vce(cluster state_district)
-
-estimates store MEX_Full
-outreg2 MEX_Full using "output_table_figures\MEX_ely_wb", excel ctitle(MEX Full) replace 
-
+			
 * Find fitted values
 predict ely_hat0_q if e(sample)
 replace ely_hat0_q = exp(ely_hat0_q) if e(sample)
@@ -165,24 +160,12 @@ gsort total_exp_usd_2011
 xtile dec_inc=total_exp_usd_2011 [pweight= weight], nq(10)
 
 * Drop outliers: the outlier is due to both the low level of CDD in 2016 in the state and the sharp growth rate in the same at 2040 (e.g. moving from 2 to 10 means a 400% increase in CDD)
-*drop if state3 == "Morelos"
+drop if state3 == "Morelos"
 
-
-*** Export
-** Growth
-* Ely_q - RCP 8.5	  
-sutex2 ely_gro_int_rcp85_SSP1_q ely_gro_int_rcp85_SSP2_q ely_gro_int_rcp85_SSP3_q ely_gro_int_rcp85_SSP4_q ely_gro_int_rcp85_SSP5_q, ///
-	   replace saving("output_table_figures\MEX_ely_q_intensive_extensive_rcp85_wb.tex") ///
-	   minmax percentiles(25 50 75)
-	   
-* Ely_q - RCP 4.5
-sutex2 ely_gro_int_rcp45_SSP1_q ely_gro_int_rcp45_SSP2_q ely_gro_int_rcp45_SSP3_q ely_gro_int_rcp45_SSP4_q ely_gro_int_rcp45_SSP5_q, ///
-	   replace saving("output_table_figures\MEX_ely_q_intensive_extensive_rcp45_wb.tex") ///
-	   minmax percentiles(25 50 75)
 	   
 ** Save
 * Keep variables for next steps
-keep hhid year country* state* district* weight ac ac_fut_* mean_CDD_wb mean_CDD_db ln_exp_cap_usd_2011 exp_cap_usd_2011 ln_total_exp_usd_2011 ely_q ely_hat_fut* ely_gro_* dec_inc pct_*
+keep hhid year country* state* district* weight ac ac_fut_* mean_CDD_wb mean_CDD_db exp_cap_usd_2011 ln_total_exp_usd_2011 ely_q ely_hat_fut* ely_gro_* dec_inc pct_*
 
 * Save
 save "output_data_files\projections\second_stage_MEX_wb.dta", replace

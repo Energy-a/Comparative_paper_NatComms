@@ -5,8 +5,8 @@
  (DOI of paper to be included upon acceptance)
  
  This do-file:
-   1) exploits CDD-wet bulb 24 deg
-   2) conducts logit regressions for India using 2011-2012 wave
+   1) exploits CDD-wet bulb 22 deg
+   2) conducts logit regressions for Brazil using 2017 wave
    3) project future ownership rates
    4) run intensive margin regressions: electricity expenditure on climate + covariates
 
@@ -19,26 +19,65 @@ cd "C:\Users\Standard\Google Drive\5-CountryExpertsExchange\Comparative_Paper\Da
 use "input_data_files\Household.dta", clear
 	 
 * Select the country
-keep if country=="India"
-drop if occupation_head == 1 & country == "India" // 64 obs: empty category in the regression -> we drop it otherwise it does not allow for computing the marginal effect of occupation.
-	 	 
+keep if country=="Brazil"
+
 * Keep only those with access to ely
 keep if ely_access == 1
 
 * Keep only last wave
-drop if year == 2005
+keep if year == 2017
 
 * Generate logs and interactions
 gen ln_total_exp_usd_2011 = log(total_exp_usd_2011)
 gen ln_ely_q=log(ely_q)
 
+* Keep only urban stratums
+keep if stratum_groups=="capital" | stratum_groups=="other_urban" 
+
+*** Merge with 22-deg CDDs
+preserve 
+
+use "input_data_files/pop_wt_dta_files_using_GLDAS_CDDwb_hist/22_deg/BRA_statistics_census_tract_level_CDD_wetbulb_22degC_1970_2016_POP_wght.dta", clear
+
+* recode stratum_groups -> equal to the names in HH_Brazil_200*
+replace stratum_groups = "MetRegion" if stratum_groups == "Met.Region"
+replace stratum_groups = "other_rural" if stratum_groups == "rural"
+replace stratum_groups = "other_urban" if stratum_groups == "urban"
+
+* rename Region_* in survey var state*
+rename Region_ID state
+tostring state, gen(state2)
+order state*
+
+qui ds state* stratum_groups, not
+collapse `r(varlist)', by(state* stratum_groups)  
+
+* create other climate vars to add in the dataframe								  
+clonevar mean_CDD_wb = mean_CDD_1970_2016 // This var has the same name in all POF waves, but CDD means are clearly computed differently in each wave					 				  
+
+* Keep
+keep stratum_groups state_code mean_CDD_wb
+
+* Save
+tempfile cdd
+save `cdd', replace	
+
+restore				  
+
+drop mean_CDD_wb
+
+* Merge
+merge m:1 state_code stratum_groups using "`cdd'"
+drop if _merge == 1 | _merge == 2
+drop _merge		
+
 * Merge data with projections dataframe
-merge m:1 country state2 using "input_data_files\Projections.dta"
+merge m:1 country state3 using "input_data_files\Projections_22deg.dta"
 drop if _merge == 2
 drop _merge
 
 * Merge data with regional historical (1986-2005) wet CDD dataframe
-merge m:1 country state3 using "input_data_files\CDD_wb_hist.dta"
+merge m:1 country state3 using "input_data_files\CDD_wb_hist_22deg.dta"
 drop if _merge == 2
 drop _merge
 
@@ -50,8 +89,8 @@ drop _merge
 ---------------------------------------------------------------*/
 
 ** Logistic regression of AC on covariates
-quietly logit ac c.mean_CDD_wb c.ln_total_exp_usd_2011 c.ln_total_exp_usd_2011#c.mean_CDD_wb i.urban n_members sh_under16 i.ownership_d i.edu_head_2 i.occupation_head ///
-		age_head i.sex_head i.state, vce(cluster state_district) nolog 
+quietly logit ac c.mean_CDD_wb c.ln_total_exp_usd_2011 c.ln_total_exp_usd_2011#c.mean_CDD_wb n_members sh_under16 i.ownership_d i.edu_head_2 ///
+		i.housing_index_lab age_head i.sex_head i.region3, vce(robust) nolog 
 
 ** Predicted probabilities
 predict phat0_obs if e(sample)
@@ -60,41 +99,36 @@ predict phat0_obs if e(sample)
 * First compute percent change
 foreach rcp in rcp45 rcp85 {
 foreach ssp in SSP1 SSP2 SSP3 SSP4 SSP5 {
-
-gen pct_cdd_`rcp'_`ssp' = (mean_CDD_2021_2060_wb_`rcp'_`ssp' - mean_CDD_wb_hist)/mean_CDD_wb_hist 
-replace pct_cdd_`rcp'_`ssp' = 0 if mean_CDD_wb_hist == 0
-
+gen pct_cdd_`rcp'_`ssp' = (mean_CDD_2021_2060_wb_`rcp'_`ssp' - mean_CDD_wb_hist)/mean_CDD_wb_hist
 }
 }
 
 foreach ssp in SSP1 SSP2 SSP3 SSP4 SSP5 {
-
-gen pct_texp_`ssp' = (GDPpc_mean_2020_2060_`ssp' - GDPpc_2010)/GDPpc_2010 
-
+gen pct_texp_`ssp' = (GDPpc_mean_2020_2060_`ssp' - GDPpc_2010)/GDPpc_2010
 }
 
 * Duplicate variables that we want to replace for projections - climate & also total expenditure
-clonevar mean_CDD_c = mean_CDD_wb 
-clonevar ln_total_exp_usd_2011_c=ln_total_exp_usd_2011 
+clonevar mean_CDD_c = mean_CDD_wb
+clonevar ln_total_exp_usd_2011_c=ln_total_exp_usd_2011
 
 * Compute future AC penetration projections
 foreach rcp in rcp45 rcp85 {
 foreach ssp in SSP1 SSP2 SSP3 SSP4 SSP5 {
 
 * Run logit regression
-quietly logit ac c.mean_CDD_wb c.ln_total_exp_usd_2011 c.ln_total_exp_usd_2011#c.mean_CDD_wb i.urban n_members sh_under16 i.ownership_d i.edu_head_2 i.occupation_head ///
-			  age_head i.sex_head i.state, vce(cluster state_district) nolog
+quietly logit ac c.mean_CDD_wb c.ln_total_exp_usd_2011 c.ln_total_exp_usd_2011#c.mean_CDD_wb n_members sh_under16 i.ownership_d i.edu_head_2 ///
+			  i.housing_index_lab age_head i.sex_head i.region3, vce(robust) nolog
 
 * Substitute the new CDD and total exp by multiplying historical one for the regional % change
-replace mean_CDD_wb = mean_CDD_wb*(1+pct_cdd_`rcp'_`ssp') 
-replace ln_total_exp_usd_2011 =log(total_exp_usd_2011*(1+pct_texp_`ssp')) 
+replace mean_CDD_wb = mean_CDD_wb*(1+pct_cdd_`rcp'_`ssp')
+replace ln_total_exp_usd_2011 =log(total_exp_usd_2011*(1+pct_texp_`ssp'))
 
 * Re-fit and compute the new predicted probabilities
-predict phat_fut_`rcp'_`ssp' if e(sample)
+predict phat_fut_`rcp'_`ssp' if e(sample) 
 
-* Reset the historical CDD
-replace mean_CDD_wb = mean_CDD_c 
-replace ln_total_exp_usd_2011 = ln_total_exp_usd_2011_c 
+* Reset the historical values
+replace mean_CDD_wb = mean_CDD_c
+replace ln_total_exp_usd_2011 = ln_total_exp_usd_2011_c
 
 }
 }
@@ -122,21 +156,21 @@ replace ac_fut_`rcp'_`ssp' = 1 if phat_fut_`rcp'_`ssp' > 0.5 & phat_fut_`rcp'_`s
 ---------------------------------------------------------------*/
 
 * Run regression of log ely consumption on linear CDD-wb and total exp
-quietly reg ln_ely_q c.mean_CDD_wb c.ln_total_exp_usd_2011 c.ln_total_exp_usd_2011#c.mean_CDD_wb i.urban n_members sh_under16 i.ownership_d i.edu_head_2 i.occupation_head  ///
-			age_head i.sex_head i.state, vce(cluster state_district)
+quietly reg ln_ely_q c.mean_CDD_wb c.ln_total_exp_usd_2011 c.ln_total_exp_usd_2011#c.mean_CDD_wb n_members sh_under16 i.ownership_d i.edu_head_2  ///
+			i.housing_index_lab age_head i.sex_head i.region3, vce(robust)
 
 * Find fitted values
 predict ely_hat0_q if e(sample)
-replace ely_hat0_q = exp(ely_hat0_q) if e(sample)
+replace ely_hat0_q = exp(ely_hat0) if e(sample)
 
 ** Predictions using future data
 foreach rcp in rcp45 rcp85 {
 foreach ssp in SSP1 SSP2 SSP3 SSP4 SSP5 {
 
-** Run regression of log ely quantity on linear CDD-wb and total exp (INT)
-quietly reg ln_ely_q c.mean_CDD_wb c.ln_total_exp_usd_2011 c.ln_total_exp_usd_2011#c.mean_CDD_wb i.urban n_members sh_under16 i.ownership_d i.edu_head_2 i.occupation_head  ///
-			age_head i.sex_head i.state, vce(cluster state_district)
-	
+* Run regression of log ely quantity on linear CDD-wb and total exp (INT)
+quietly reg ln_ely_q c.mean_CDD_wb c.ln_total_exp_usd_2011 c.ln_total_exp_usd_2011#c.mean_CDD_wb n_members sh_under16 i.ownership_d i.edu_head_2 ///
+			i.housing_index_lab age_head i.sex_head i.region3, vce(robust)
+
 * Substitute the new CDD and total exp by multiplying historical one for the regional % change
 replace mean_CDD_wb = mean_CDD_wb*(1+pct_cdd_`rcp'_`ssp') 
 replace ln_total_exp_usd_2011 =log(total_exp_usd_2011*(1+pct_texp_`ssp')) 
@@ -155,17 +189,14 @@ gen ely_gro_int_`rcp'_`ssp'_q = (ely_hat_fut_int_`rcp'_`ssp'_q/ely_hat0_q)-1
 
 }
 }
-
-** Create income decile
-gsort total_exp_usd_2011
-xtile dec_inc=total_exp_usd_2011 [pweight= weight], nq(10)
-
-
+	
+	   
 ** Save
 * Keep variables for next steps
-keep hhid year country* state* district* weight ac ac_fut_* mean_CDD_wb mean_CDD_db exp_cap_usd_2011 ln_total_exp_usd_2011 ely_q ely_hat_fut* ely_gro_* dec_inc pct_*
+keep hhid year country* state* district* weight ac ac_fut_* mean_CDD_wb mean_CDD_db exp_cap_usd_2011 ln_total_exp_usd_2011 ely_q ely_hat_fut* ely_gro_* pct_texp_*
 
-* Save
-save "output_data_files\projections\second_stage_IND_wb.dta", replace
+* Save	   
+save "output_data_files\projections\second_stage_BRA_wb_22.dta", replace 	   
 
+	   
 ************ STOP ************
