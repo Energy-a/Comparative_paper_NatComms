@@ -2,7 +2,7 @@ Replication code for Plots and Tables, Pavanello et al. (2021): "Air-Conditionin
 
 R scripts:
 
-- Figure_1_panel_A_and_Figure_A1_global_map
+- Figure_1_panel_A_and_Figure_S1_global_map
 	- they are directly created using the input data
 
 - Figure_1_panel_B
