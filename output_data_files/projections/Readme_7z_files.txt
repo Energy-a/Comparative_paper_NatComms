@@ -1,4 +1,4 @@
-The .dta files are compressed and saved by country. Each .7z file contains:
+The .dta files are compressed and saved by country. Each .7z file contains projections:
 
 second_stage_COUNTRY_db.dta
 second_stage_COUNTRY_db_22.dta
