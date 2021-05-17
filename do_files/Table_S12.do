@@ -48,6 +48,7 @@ preserve
 use "input_data_files/pop_wt_dta_files_using_GLDAS_CDDwb_hist/22_deg/BRA_statistics_census_tract_level_CDD_wetbulb_22degC_1970_2016_POP_wght.dta", clear
 
 * recode stratum_groups -> equal to the names in HH_Brazil_200*
+replace stratum_groups = "capital" if stratum_groups == "urban" & state_code == "DF"
 replace stratum_groups = "MetRegion" if stratum_groups == "Met.Region"
 replace stratum_groups = "other_rural" if stratum_groups == "rural"
 replace stratum_groups = "other_urban" if stratum_groups == "urban"
@@ -319,6 +320,7 @@ preserve
 use "input_data_files/pop_wt_dta_files_using_GLDAS_CDD_hist/22_deg/BRA_statistics_census_tract_level_CDD_22degC_1970_2016_POP_wght.dta", clear
 
 * recode stratum_groups -> equal to the names in HH_Brazil_200*
+replace stratum_groups = "capital" if stratum_groups == "urban" & state_code == "DF"
 replace stratum_groups = "MetRegion" if stratum_groups == "Met.Region"
 replace stratum_groups = "other_rural" if stratum_groups == "rural"
 replace stratum_groups = "other_urban" if stratum_groups == "urban"
