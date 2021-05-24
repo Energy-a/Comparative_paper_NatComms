@@ -138,15 +138,13 @@ rm(FOUR_COUNTRIES_state)
 
 
 ## State Morelos in Mexico has crazy high Ely numbers..so dropping them for now in both RCPs
-## States Gujarat, Sikkim and Lakshadeep in India as they have missing values for Ely, remove them ##
+## States Sikkim and Lakshadeep in India as they have missing values for Ely, remove them ##
 
-FOUR_COUNTRIES_state_ely_rcp45          <- FOUR_COUNTRIES_state_ely_rcp45[!(FOUR_COUNTRIES_state_ely_rcp45$State=="Gujarat" |
-                                                                              FOUR_COUNTRIES_state_ely_rcp45$State=="Sikkim" |
+FOUR_COUNTRIES_state_ely_rcp45          <- FOUR_COUNTRIES_state_ely_rcp45[!(FOUR_COUNTRIES_state_ely_rcp45$State=="Sikkim" |
                                                                               FOUR_COUNTRIES_state_ely_rcp45$State=="Lakshadeep" |
                                                                               FOUR_COUNTRIES_state_ely_rcp45$State=="Morelos"),]
 
-FOUR_COUNTRIES_state_ely_rcp85          <- FOUR_COUNTRIES_state_ely_rcp85[!(FOUR_COUNTRIES_state_ely_rcp85$State=="Gujarat" |
-                                                                              FOUR_COUNTRIES_state_ely_rcp85$State=="Sikkim" |
+FOUR_COUNTRIES_state_ely_rcp85          <- FOUR_COUNTRIES_state_ely_rcp85[!(FOUR_COUNTRIES_state_ely_rcp85$State=="Sikkim" |
                                                                               FOUR_COUNTRIES_state_ely_rcp85$State=="Lakshadeep" |
                                                                               FOUR_COUNTRIES_state_ely_rcp85$State=="Morelos"),]
 
@@ -452,7 +450,7 @@ Brazil_state_ely_rcp45_plot  <- plot_ly(Brazil_state_ely_rcp45,
                                         y = ~State, 
                                         z = ~value, 
                                         type = "heatmap", width = 500, height = 800, 
-                                        # colorscale='Viridis', # other colorscale='Reds' or âBlueredâ or âPortland...
+                                        # colorscale='Viridis', # other colorscale='Reds' or ‘Bluered’ or �Portland��...
                                         colors = palette(10),
                                         # zmin = min(Brazil_state_ely_rcp45$value), #set min and max equal for the two different plots 
                                         # zmax = max(Brazil_state_ely_rcp45$value), # so that the scale of z is comparable
@@ -477,7 +475,7 @@ Brazil_state_ely_rcp85_plot  <- plot_ly(Brazil_state_ely_rcp85,
                                         y = ~State, 
                                         z = ~value, 
                                         type = "heatmap", width = 500, height = 800,  
-                                        # colorscale='Portland', # other colorscale='Reds' or âBlueredâ or âViridisâ...
+                                        # colorscale='Portland', # other colorscale='Reds' or ‘Bluered’ or ‘Viridis’...
                                         colors = palette(10),
                                         zmin = zmin_ely_rcp85, #set min and max equal for the two different plots 
                                         zmax = zmax_ely_rcp85, # so that the scale of z is comparable
@@ -499,7 +497,7 @@ Brazil_state_AC_plot_rcp45  <- plot_ly(Brazil_state_AC_rcp45,
                                        y = ~State, 
                                        z = ~value, 
                                        type = "heatmap", width = 500, height = 800,  
-                                       # colorscale='Portland', # other colorscale='Reds' or âBlueredâ or âViridisâ...
+                                       # colorscale='Portland', # other colorscale='Reds' or ‘Bluered’ or ‘Viridis’...
                                        colors = palette(10),
                                        zmin = zmin_AC_rcp45, #set min and max equal for the two different plots 
                                        zmax = zmax_AC_rcp45, # so that the scale of z is comparable
@@ -523,7 +521,7 @@ Brazil_state_AC_plot_rcp85  <- plot_ly(Brazil_state_AC_rcp85,
                                        z = ~value, 
                                        # text = as.character(round(Brazil_state_AC_rcp85$value[1:26], digits =2)),
                                        type = "heatmap", width = 500, height = 800,  
-                                       # colorscale='Portland', # other colorscale='Reds' or âBlueredâ or âViridisâ...
+                                       # colorscale='Portland', # other colorscale='Reds' or ‘Bluered’ or ‘Viridis’...
                                        colors = palette(10),
                                        zmin = zmin_AC_rcp85, #set min and max equal for the two different plots 
                                        zmax = zmax_AC_rcp85, # so that the scale of z is comparable
@@ -560,7 +558,7 @@ India_state_ely_rcp45_plot  <- plot_ly(India_state_ely_rcp45,
                                        y = ~State, 
                                        z = ~value, 
                                        type = "heatmap", width = 500, height = 800,  
-                                       # colorscale='Portland', # other colorscale='Reds' or âBlueredâ or âViridisâ...
+                                       # colorscale='Portland', # other colorscale='Reds' or ‘Bluered’ or ‘Viridis’...
                                        colors = palette(10),
                                        zmin = min(India_state_ely_rcp45$value), #set min and max equal for the two different plots 
                                        zmax = max(India_state_ely_rcp45$value), # so that the scale of z is comparable
@@ -583,7 +581,7 @@ India_state_ely_rcp85_plot  <- plot_ly(India_state_ely_rcp85,
                                        y = ~State, 
                                        z = ~value, 
                                        type = "heatmap", width = 500, height = 800,  
-                                       # colorscale='Portland', # other colorscale='Reds' or âBlueredâ or âViridisâ...
+                                       # colorscale='Portland', # other colorscale='Reds' or ‘Bluered’ or ‘Viridis’...
                                        colors = palette(10),
                                        zmin = min(India_state_ely_rcp85$value), #set min and max equal for the two different plots 
                                        zmax = max(India_state_ely_rcp85$value), # so that the scale of z is comparable
@@ -604,7 +602,7 @@ India_state_AC_plot_rcp45  <- plot_ly(India_state_AC_rcp45,
                                       y = ~State, 
                                       z = ~value, 
                                       type = "heatmap", width = 500, height = 800,  
-                                      # colorscale='Portland', # other colorscale='Reds' or âBlueredâ or âViridisâ...
+                                      # colorscale='Portland', # other colorscale='Reds' or ‘Bluered’ or ‘Viridis’...
                                       colors = palette(10),
                                       zmin = min(India_state_AC_rcp45$value), #set min and max equal for the two different plots 
                                       zmax = max(India_state_AC_rcp45$value), # so that the scale of z is comparable
@@ -627,7 +625,7 @@ India_state_AC_plot_rcp85  <- plot_ly(India_state_AC_rcp85,
                                       y = ~State, 
                                       z = ~value, 
                                       type = "heatmap", width = 500, height = 800,  
-                                      # colorscale='Portland', # other colorscale='Reds' or âBlueredâ or âViridisâ...
+                                      # colorscale='Portland', # other colorscale='Reds' or ‘Bluered’ or ‘Viridis’...
                                       colors = palette(10),
                                       zmin = min(India_state_AC_rcp85$value), #set min and max equal for the two different plots 
                                       zmax = max(India_state_AC_rcp85$value), # so that the scale of z is comparable
@@ -664,7 +662,7 @@ Indonesia_state_ely_rcp45_plot  <- plot_ly(Indonesia_state_ely_rcp45,
                                            y = ~State, 
                                            z = ~value, 
                                            type = "heatmap", width = 500, height = 800,  
-                                           # colorscale='Portland', # other colorscale='Reds' or âBlueredâ or âViridisâ...
+                                           # colorscale='Portland', # other colorscale='Reds' or ‘Bluered’ or ‘Viridis’...
                                            colors = palette(10),
                                            zmin = min(Indonesia_state_ely_rcp45$value), #set min and max equal for the two different plots 
                                            zmax = max(Indonesia_state_ely_rcp45$value), # so that the scale of z is comparable
@@ -687,7 +685,7 @@ Indonesia_state_ely_rcp85_plot  <- plot_ly(Indonesia_state_ely_rcp85,
                                            y = ~State, 
                                            z = ~value, 
                                            type = "heatmap", width = 500, height = 800,  
-                                           # colorscale='Portland', # other colorscale='Reds' or âBlueredâ or âViridisâ...
+                                           # colorscale='Portland', # other colorscale='Reds' or ‘Bluered’ or ‘Viridis’...
                                            colors = palette(10),
                                            zmin = min(Indonesia_state_ely_rcp85$value), #set min and max equal for the two different plots 
                                            zmax = max(Indonesia_state_ely_rcp85$value), # so that the scale of z is comparable
@@ -708,7 +706,7 @@ Indonesia_state_AC_plot_rcp45  <- plot_ly(Indonesia_state_AC_rcp45,
                                           y = ~State, 
                                           z = ~value, 
                                           type = "heatmap", width = 500, height = 800,  
-                                          # colorscale='Portland', # other colorscale='Reds' or âBlueredâ or âViridisâ...
+                                          # colorscale='Portland', # other colorscale='Reds' or ‘Bluered’ or ‘Viridis’...
                                           colors = palette(10),
                                           zmin = min(Indonesia_state_AC_rcp45$value), #set min and max equal for the two different plots 
                                           zmax = max(Indonesia_state_AC_rcp45$value), # so that the scale of z is comparable
@@ -731,7 +729,7 @@ Indonesia_state_AC_plot_rcp85  <- plot_ly(Indonesia_state_AC_rcp85,
                                           y = ~State, 
                                           z = ~value, 
                                           type = "heatmap", width = 500, height = 800,  
-                                          # colorscale='Portland', # other colorscale='Reds' or âBlueredâ or âViridisâ...
+                                          # colorscale='Portland', # other colorscale='Reds' or ‘Bluered’ or ‘Viridis’...
                                           colors = palette(10),
                                           zmin = min(Indonesia_state_AC_rcp85$value), #set min and max equal for the two different plots 
                                           zmax = max(Indonesia_state_AC_rcp85$value), # so that the scale of z is comparable
@@ -768,7 +766,7 @@ Mexico_state_ely_rcp45_plot  <- plot_ly(Mexico_state_ely_rcp45,
                                         y = ~State, 
                                         z = ~value, 
                                         type = "heatmap", width = 500, height = 800,  
-                                        # colorscale='Portland', # other colorscale='Reds' or âBlueredâ or âViridisâ...
+                                        # colorscale='Portland', # other colorscale='Reds' or ‘Bluered’ or ‘Viridis’...
                                         colors = palette(10),
                                         zmin = min(Mexico_state_ely_rcp45$value), #set min and max equal for the two different plots 
                                         zmax = max(Mexico_state_ely_rcp45$value), # so that the scale of z is comparable
@@ -791,7 +789,7 @@ Mexico_state_ely_rcp85_plot  <- plot_ly(Mexico_state_ely_rcp85,
                                         y = ~State, 
                                         z = ~value, 
                                         type = "heatmap", width = 500, height = 800,  
-                                        # colorscale='Portland', # other colorscale='Reds' or âBlueredâ or âViridisâ...
+                                        # colorscale='Portland', # other colorscale='Reds' or ‘Bluered’ or ‘Viridis’...
                                         colors = palette(10),
                                         zmin = min(Mexico_state_ely_rcp85$value), #set min and max equal for the two different plots 
                                         zmax = max(Mexico_state_ely_rcp85$value), # so that the scale of z is comparable
@@ -812,7 +810,7 @@ Mexico_state_AC_plot_rcp45  <- plot_ly(Mexico_state_AC_rcp45,
                                        y = ~State, 
                                        z = ~value, 
                                        type = "heatmap", width = 500, height = 800,  
-                                       # colorscale='Portland', # other colorscale='Reds' or âBlueredâ or âViridisâ...
+                                       # colorscale='Portland', # other colorscale='Reds' or ‘Bluered’ or ‘Viridis’...
                                        colors = palette(10),
                                        zmin = min(Mexico_state_AC_rcp45$value), #set min and max equal for the two different plots 
                                        zmax = max(Mexico_state_AC_rcp45$value), # so that the scale of z is comparable
@@ -835,7 +833,7 @@ Mexico_state_AC_plot_rcp85  <- plot_ly(Mexico_state_AC_rcp85,
                                        y = ~State, 
                                        z = ~value, 
                                        type = "heatmap", width = 500, height = 800,  
-                                       # colorscale='Portland', # other colorscale='Reds' or âBlueredâ or âViridisâ...
+                                       # colorscale='Portland', # other colorscale='Reds' or ‘Bluered’ or ‘Viridis’...
                                        colors = palette(10),
                                        zmin = min(Mexico_state_AC_rcp85$value), #set min and max equal for the two different plots 
                                        zmax = max(Mexico_state_AC_rcp85$value), # so that the scale of z is comparable
