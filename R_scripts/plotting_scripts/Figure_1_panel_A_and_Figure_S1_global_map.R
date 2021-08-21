@@ -40,6 +40,7 @@ if(!require(rgdal)){install.packages("rgdal")}
 if(!require(raster)){install.packages("raster")}
 if(!require(rworldmap)){install.packages("rworldmap")} ## Will be used for plotting global gridded CDDwb
 if(!require(grid)){install.packages("grid")}
+if(!require(viridis)){install.packages("viridis")}
 
 ## Set path to main directory, input netcdf and output plot directories ##
 
@@ -116,7 +117,8 @@ for (country in target_country) {
 
   plot_CDDwb_mean <- spplot(mean_1970_2012_CDDwb_country, colorkey = list(space = "bottom", height = 1.0, labels=list(cex=1.1)),
                             cex=0.4, pch=15, auto.key = F,
-                            col.regions = colorRampPalette(c("skyblue1", "yellow", "red")),
+                            # col.regions = colorRampPalette(c("skyblue1", "yellow", "red")),
+                            col.regions = turbo(256), ## change to magma, viridis etc
                             par.settings=list(axis.line=list(col='transparent'), layout.heights = list(key.top = 1.7)),
                             # fontsize=list(text=20)), # fontsize changes not only legend text size, but also that of legend key
                             sp.layout=list(pols1))
@@ -141,7 +143,8 @@ pols1                  <- list("sp.lines", as(worldmap, 'SpatialLines'), cex = 1
 
 plot_global_CDDwb_mean <- spplot(mean_1970_2012_CDDwb_disagg, colorkey = list(space = "bottom", height = 1.0, labels=list(cex=1.1)),
                                  cex=0.4, pch=15, auto.key = F,
-                                 col.regions = colorRampPalette(c("white", "yellow", "orange", "red")),
+                                 # col.regions = colorRampPalette(c("white", "yellow", "orange", "red")),
+                                 col.regions = turbo(256), ## change to magma, viridis etc
                                  par.settings=list(axis.line=list(col='transparent'), layout.heights = list(key.top = 1.7)),
                                  sp.layout=list(pols1))
 
