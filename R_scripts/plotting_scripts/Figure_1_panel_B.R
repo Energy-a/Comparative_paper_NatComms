@@ -75,9 +75,9 @@ BRA_local_AC_FAN_REF_kd  <- ggplot(data = na.omit(subset(BRA,
                                                             select = c(kernel_exp, density, country))), 
                                       aes(x = kernel_exp, y = density, 
                                           colour = "HH Density"), inherit.aes = FALSE, linetype = "dashed", size = 1) +
-                            scale_color_manual(values = c('AC' = '#FF1E42', 'Fan' = '#003943',
-                                                          'Refrigerator' = '#00AC8B','HH Density' = "black")) +
-                            scale_x_log10(breaks = c(0, 1000, 10000, 100000), labels = comma) + 
+                            scale_color_manual(values = c('AC' = '#fc8d62', 'Fan' = '#66c2a5',
+                                                          'Refrigerator' = '#8da0cb','HH Density' = "black")) +
+                                  scale_x_log10(breaks = c(0, 1000, 10000, 100000), labels = comma) + 
                             coord_cartesian(xlim = c(500, 100000), ylim = c(0,1)) + # change scale for zooming in/out
                             scale_y_continuous(breaks = c(0.00, 0.25, 0.50, 0.75, 1.00)) +
                             xlab("") +
@@ -92,11 +92,13 @@ BRA_local_AC_FAN_REF_kd  <- ggplot(data = na.omit(subset(BRA,
                                   text = element_text(size = 20, family = "Tahoma",color="black"),
                                   legend.title=element_blank(),
                                   legend.position = "none")
-
 png(paste0(line_plot_dir, 'BRA_local_AC_FAN_REF_kd.png',sep=''), height=7.75, width=8.5, units='in', res=1200)
 print(BRA_local_AC_FAN_REF_kd)
 dev.off()
 
+#66c2a5 - FAN
+#fc8d62 - ac
+#8da0cb - REF
 
 
 # IND
@@ -117,8 +119,8 @@ IND_local_AC_FAN_REF_kd  <- ggplot(data = na.omit(subset(IND,
                                                             select = c(kernel_exp, density, country))), 
                                       aes(x = kernel_exp, y = density, 
                                           colour = "HH Density"), inherit.aes = FALSE, linetype = "dashed", size = 1) +
-                            scale_color_manual(values = c('AC' = '#FF1E42', 'Fan' = '#003943',
-                                                          'Refrigerator' = '#00AC8B','HH Density' = "black")) +
+                            scale_color_manual(values = c('AC' = '#fc8d62', 'Fan' = '#66c2a5',
+                                                          'Refrigerator' = '#8da0cb','HH Density' = "black")) +
                             scale_x_log10(breaks = c(0, 1000, 10000, 100000), labels = comma) + 
                             coord_cartesian(xlim = c(500, 100000), ylim = c(0,1)) + # change scale for zooming in/out
                             scale_y_continuous(breaks = c(0.00, 0.25, 0.50, 0.75, 1.00)) +
@@ -159,8 +161,8 @@ MEX_local_AC_FAN_REF_kd  <- ggplot(data = na.omit(subset(MEX,
                                                             select = c(kernel_exp, density, country))), 
                                       aes(x = kernel_exp, y = density, 
                                           colour = "HH Density"), inherit.aes = FALSE, linetype = "dashed", size = 1) +
-                            scale_color_manual(values = c('AC' = '#FF1E42', 'Fan' = '#003943',
-                                                          'Refrigerator' = '#00AC8B','HH Density' = "black")) +
+                            scale_color_manual(values = c('AC' = '#fc8d62', 'Fan' = '#66c2a5',
+                                                          'Refrigerator' = '#8da0cb','HH Density' = "black")) +
                             scale_x_log10(breaks = c(0, 1000, 10000, 100000), labels = comma) + 
                             coord_cartesian(xlim = c(500, 100000), ylim = c(0,1)) + # change scale for zooming in/out
                             scale_y_continuous(breaks = c(0.00, 0.25, 0.50, 0.75, 1.00)) +

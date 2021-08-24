@@ -108,8 +108,8 @@ PRED_PROB_APPL_wb    <- FOUR_COUNTRIES_APPL_wb %>%
                         scale_y_continuous(breaks = seq(0, 100, by = 20)) +
                         scale_x_continuous(breaks = seq(0, 1000, by=250)) +
                         theme_bw() +
-                        scale_fill_manual(values=c("#FF1E42", "#003943", "#00AC8B")) +
-                        scale_colour_manual(values=c("#FF1E42", "#003943", "#00AC8B")) +
+                        scale_fill_manual(values=c("#fc8d62", "#66c2a5", "#8da0cb")) +
+                        scale_colour_manual(values=c("#fc8d62", "#66c2a5", "#8da0cb")) +
                         theme(panel.background=element_blank(),
                               axis.line = element_line(color="lightgray"),
                               panel.border=element_blank(),
@@ -140,8 +140,8 @@ PRED_PROB_APPL_db    <- FOUR_COUNTRIES_APPL_db %>%
                         scale_y_continuous(breaks = seq(0, 100, by = 20)) +
                         scale_x_continuous(breaks = seq(0, 1000, by=250)) +
                         theme_bw() +
-                        scale_fill_manual(values=c("#FF1E42", "#003943", "#00AC8B")) +
-                        scale_colour_manual(values=c("#FF1E42", "#003943", "#00AC8B")) +
+                        scale_fill_manual(values=c("#fc8d62", "#66c2a5", "#8da0cb")) +
+                        scale_colour_manual(values=c("#fc8d62", "#66c2a5", "#8da0cb")) +
                         theme(panel.background=element_blank(),
                               axis.line = element_line(color="lightgray"),
                               panel.border=element_blank(),

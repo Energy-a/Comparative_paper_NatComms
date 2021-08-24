@@ -71,9 +71,9 @@ dydx_wb    <- FOUR_COUNTRIES_dydx_wb %>%
               scale_y_continuous(labels = comma) +
               coord_cartesian(xlim = c(500, 50000)) + # change scale for zooming in/out
               theme_bw() +
-              scale_fill_manual(values=c("#FF1E42", "#003943", "#00AC8B")) +
-              scale_colour_manual(values=c("#FF1E42", "#003943", "#00AC8B")) +
-              theme(panel.background=element_blank(),
+              scale_fill_manual(values=c("#fc8d62", "#66c2a5", "#8da0cb")) +
+              scale_colour_manual(values=c("#fc8d62", "#66c2a5", "#8da0cb")) +
+  theme(panel.background=element_blank(),
                     axis.line = element_line(color="lightgray"),
                     panel.border=element_blank(),
                     panel.grid.major=element_blank(),
@@ -85,7 +85,7 @@ dydx_wb    <- FOUR_COUNTRIES_dydx_wb %>%
               facet_wrap(. ~ country, ncol=4)
 dydx_wb
 
-png(paste0(plot_dir, 'Figure_2_panelA.png',sep=''), height=6.75, width=13, units='in', res=1200)
+png(paste0(plot_dir, 'Figure_2_panelA_aug.png',sep=''), height=6.75, width=13, units='in', res=1200)
 print(dydx_wb)
 dev.off()
 
@@ -103,20 +103,20 @@ dydx_db    <- FOUR_COUNTRIES_dydx_db %>%
               scale_y_continuous(labels = comma) +
               coord_cartesian(xlim = c(500, 50000)) + # change scale for zooming in/out
               theme_bw() +
-              scale_fill_manual(values=c("#FF1E42", "#003943", "#00AC8B")) +
-              scale_colour_manual(values=c("#FF1E42", "#003943", "#00AC8B")) +
+              scale_fill_manual(values=c("#fc8d62", "#66c2a5", "#8da0cb")) +
+              scale_colour_manual(values=c("#fc8d62", "#66c2a5", "#8da0cb")) +
               theme(panel.background=element_blank(),
-                    axis.line = element_line(color="lightgray"),
-                    panel.border=element_blank(),
-                    panel.grid.major=element_blank(),
-                    panel.grid.minor=element_blank(),
-                    plot.title = element_text(size = 14, family = "Tahoma", hjust = 0.5), 
-                    text = element_text(size = 14, family = "Tahoma"),
-                    legend.title=element_blank(),
-                    legend.position = "none") +
-              facet_wrap(. ~ country, ncol=4)
+                                axis.line = element_line(color="lightgray"),
+                                panel.border=element_blank(),
+                                panel.grid.major=element_blank(),
+                                panel.grid.minor=element_blank(),
+                                plot.title = element_text(size = 14, family = "Tahoma", hjust = 0.5), 
+                                text = element_text(size = 14, family = "Tahoma"),
+                                legend.title=element_blank(),
+                                legend.position = "none") +
+                          facet_wrap(. ~ country, ncol=4)
 dydx_db
 
-png(paste0(SI_plot_dir, 'Figure_S3_panelA.png.png',sep=''), height=6.75, width=13, units='in', res=1200)
+png(paste0(SI_plot_dir, 'Figure_S3_panelA.aug.png',sep=''), height=6.75, width=13, units='in', res=1200)
 print(dydx_db)
 dev.off()
