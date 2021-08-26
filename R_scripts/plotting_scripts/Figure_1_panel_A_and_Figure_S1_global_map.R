@@ -87,6 +87,10 @@ mean_1970_2012_CDDwb_disagg  <- raster::disaggregate(mean_1970_2012_CDDwb, fact 
 
 res(mean_1970_2012_CDDwb_disagg)  # 0.025 x 0.025 deg
 
+## Set the color palette for the maps
+nb.cols <- 20 
+mycolors <- colorRampPalette(brewer.pal(8, "OrRd"))(nb.cols)
+
 ##### Plot maps for each country in a for loop ###########
 
 for (country in target_country) {
@@ -118,7 +122,8 @@ for (country in target_country) {
   plot_CDDwb_mean <- spplot(mean_1970_2012_CDDwb_country, colorkey = list(space = "bottom", height = 1.0, labels=list(cex=1.1)),
                             cex=0.4, pch=15, auto.key = F,
                             # col.regions = colorRampPalette(c("skyblue1", "yellow", "red")),
-                            col.regions = turbo(256), ## change to magma, viridis etc
+                            # col.regions = turbo(256), ## change to magma, viridis etc
+                            col.regions = mycolors,
                             par.settings=list(axis.line=list(col='transparent'), layout.heights = list(key.top = 1.7)),
                             # fontsize=list(text=20)), # fontsize changes not only legend text size, but also that of legend key
                             sp.layout=list(pols1))
@@ -126,7 +131,7 @@ for (country in target_country) {
   png(paste0(plot_dir, 'CDD_wetbulb/mean/mean_CDDwb_24degC_1970_2012_', country,'.png',sep=''),
       height=6.75, width=7.5, units='in',res=1200)
   print(plot_CDDwb_mean)
-  grid.text("\u00B0C days", x=unit(0.5, "npc"), y=unit(0.15, "npc"), rot=0,  gp=gpar(fontsize=15, col="black"))
+#  grid.text("\u00B0C days", x=unit(0.5, "npc"), y=unit(0.15, "npc"), rot=0,  gp=gpar(fontsize=15, col="black"))
   dev.off()
 
 } ### End of for loop 
@@ -144,7 +149,8 @@ pols1                  <- list("sp.lines", as(worldmap, 'SpatialLines'), cex = 1
 plot_global_CDDwb_mean <- spplot(mean_1970_2012_CDDwb_disagg, colorkey = list(space = "bottom", height = 1.0, labels=list(cex=1.1)),
                                  cex=0.4, pch=15, auto.key = F,
                                  # col.regions = colorRampPalette(c("white", "yellow", "orange", "red")),
-                                 col.regions = turbo(256), ## change to magma, viridis etc
+                                 # col.regions = turbo(256), ## change to magma, viridis etc
+                                 col.regions = mycolors,
                                  par.settings=list(axis.line=list(col='transparent'), layout.heights = list(key.top = 1.7)),
                                  sp.layout=list(pols1))
 
